@@ -9,6 +9,7 @@
         <title>Vote</title>
     </head>
     <body>
+        <h1 class="jumbotron">ChatApp</h1>
         <container>
             <section>
               <div>Yes Votes: <span id="yes">{{ votes["yes"] }}</span></div>
@@ -19,8 +20,15 @@
               <button class="button0" data-vote="no">No</button>
               <button class="button0" data-vote="maybe">Maybe</button><br/>
             </section>
-            <section>
-                Channel Listing:  {{channel_list}}
+            <section id="channel-listing">
+                <h3>Channel Listing:</h3>&nbsp;&nbsp;
+                <div id="channel-buttons">
+                  {% for result in channel_list[0] %}
+                      <a href="#"><button type="button" class="btn btn-info">{{result}}</button><a href="#">
+                  {% endfor %}
+                </div>
+                <div>Add New Channel:  <input type="text" id="newchannel" name="newchannel"> <button id="button2">Submit</button></div>
+
             </section>
 
             <section>

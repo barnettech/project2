@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelector('#textarena').style.visibility = 'visible';
         document.querySelector('#button1').style.visibility = 'visible';
     }
+    document.querySelector('#channel-listing a button').classList.add('active');
     // Connect to websocket
     var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
 
@@ -41,6 +42,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.querySelector('#button1').style.visibility = 'visible';
                 //socket.emit('chat emit', {'chattext': chattext});
             };
+        document.querySelector("#button2").onclick = () => {
+                console.log('add a channel');
+                const newchannel = document.querySelector('#newchannel').value;
+                //var element = document.querySelector('#channel-buttons');
+                //var element2 = document.createElement("button");
+                //document.querySelector('#channel-buttons').createElement('<a href="#"><button type="button" class="btn btn-info">{{result}}</button><a href="#">');
+                document.getElementById('channel-buttons').innerHTML += '<a href="#"><button type="button" class="btn btn-info">' + newchannel + '</button><a href="#">';
+                socket.emit('add channel', {'newchannel': newchannel});
+
+                var parent = document.createElement("div");
+var p = document.createElement("p");
+parent.append("Some text", p);
+            };
     });
 
     // When a new vote is announced, increase the count
@@ -53,5 +67,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // When new text is chatted, broadcast it to all
     socket.on('chat emit', data => {
         document.querySelector('#chathistory-area').innerHTML += '<div>' + data + '</div>';
+    });
+
+    socket.on('new channel', data => {
+        console.log('added new channel ' + data);
     });
 });

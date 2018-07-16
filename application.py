@@ -14,8 +14,9 @@ app = Flask(__name__)
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 socketio = SocketIO(app)
 
-# list of all channels
-channel_list = ['general']
+# nested list of lists to store channels, last 100 chats for a channel, and those present in the chat room
+channel_list = [['Lobby', 'test'], ['Chat1', 'Chat2', 'Chat3'], ['Jim', 'Jon', 'Bob']]
+
 votes = {"yes": 0, "no": 0, "maybe": 0}
 
 @app.route("/")
@@ -35,3 +36,12 @@ def chat(data):
     chattext = data["chattext"]
     print(chattext)
     emit("chat emit", chattext, broadcast=True)
+
+@socketio.on("add channel")
+def addchannel(data):
+    print('here I am');
+    print(data)
+    newchannel = data["newchannel"]
+    channel_list[0].append(newchannel)
+    print(channel_list)
+    emit("new channel", newchannel, broadcast=True)
