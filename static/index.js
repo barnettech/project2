@@ -1,5 +1,16 @@
 document.addEventListener('DOMContentLoaded', () => {
-
+    console.log(localStorage.getItem('username'));
+    if (localStorage.getItem('username') === null) {
+      document.querySelector('#username').style.visibility = 'visible';
+      document.querySelector('#button0').style.visibility = 'visible';
+      document.querySelector('#textarena').style.visibility = 'hidden';
+      document.querySelector('#button1').style.visibility = 'hidden';
+    } else {
+        document.querySelector('#username').style.visibility = 'hidden';
+        document.querySelector('#button0').style.visibility = 'hidden';
+        document.querySelector('#textarena').style.visibility = 'visible';
+        document.querySelector('#button1').style.visibility = 'visible';
+    }
     // Connect to websocket
     var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
 
@@ -14,8 +25,21 @@ document.addEventListener('DOMContentLoaded', () => {
             };
         });
         document.querySelector("#button1").onclick = () => {
-                var chattext = document.getElementById("textarena").value;
-                socket.emit('chat emit', {'chattext': chattext});
+                // var chattext = document.getElementById("textarena").value;
+                const chattext = document.querySelector('#textarena').value;
+                let username = localStorage.getItem('username');
+                console.log(username);
+                socket.emit('chat emit', {'chattext': username + ': ' + chattext});
+            };
+        document.querySelector("#button0").onclick = () => {
+                var username = document.querySelector('#username').value;
+                localStorage.setItem('username', username);
+                localStorage.setItem('key', 'value');
+                document.querySelector('#username').style.visibility = 'hidden';
+                document.querySelector('#button0').style.visibility = 'hidden';
+                document.querySelector('#textarena').style.visibility = 'visible';
+                document.querySelector('#button1').style.visibility = 'visible';
+                //socket.emit('chat emit', {'chattext': chattext});
             };
     });
 
@@ -28,7 +52,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // When new text is chatted, broadcast it to all
     socket.on('chat emit', data => {
-        console.log(data);
-        document.querySelector('#textarena').innerHTML = data;
+        document.querySelector('#chathistory-area').innerHTML += '<div>' + data + '</div>';
     });
 });

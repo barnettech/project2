@@ -19,14 +19,20 @@
               <button class="button0" data-vote="no">No</button>
               <button class="button0" data-vote="maybe">Maybe</button><br/>
             </section>
+            <section>
+                Channel Listing:  {{channel_list}}
+            </section>
 
             <section>
-            <input type="text" name="username"><br>
+            Type in a username to use in the chat:  <input type="text" id="username" name="username"> <button id="button0">Submit</button> <br>
+              <br/>
+              <br/>
+              <textarea id="textarena" rows="2" cols="50">
+              </textarea><br/>
               <button id="button1">Submit</button>
-              <br/>
-              <br/>
-              <textarea id="textarena" rows="4" cols="50">
-              </textarea>
+            </section>
+            <section>
+                <div id="chathistory-area"></div>
             </section>
         </container>
     </body>
