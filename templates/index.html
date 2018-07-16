@@ -21,11 +21,11 @@
               <button class="button0" data-vote="maybe">Maybe</button><br/>
             </section>
             <section id="channel-listing">
-                <h3>Channel Listing:</h3>&nbsp;&nbsp;
+                <h3>Channel Listing:</h3>
                 <div id="channel-buttons">
                   {% for result in channel_list[0] %}
                       <a href="#"><button type="button" class="btn btn-info">{{result}}</button><a href="#">
-                  {% endfor %}
+                  {% endfor %} <br/><br/>
                 </div>
                 <div>Add New Channel:  <input type="text" id="newchannel" name="newchannel"> <button id="button2">Submit</button></div>
 

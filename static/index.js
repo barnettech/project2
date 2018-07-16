@@ -32,6 +32,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.log(username);
                 socket.emit('chat emit', {'chattext': username + ': ' + chattext});
             };
+
+        var allchannelbuttons = document.querySelectorAll("#channel-buttons button");
+        for (var i = 0; i < allchannelbuttons.length; i++) {
+          allchannelbuttons[i].addEventListener('click', function(event) {
+            var allchannelbuttons2 = document.querySelectorAll("#channel-buttons button");
+            for (var i = 0; i < allchannelbuttons2.length; i++) {
+                allchannelbuttons2[i].classList.remove('active');
+            }
+            this.classList.add('active');
+          });
+        }
+
         document.querySelector("#button0").onclick = () => {
                 var username = document.querySelector('#username').value;
                 localStorage.setItem('username', username);
