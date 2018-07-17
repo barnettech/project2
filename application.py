@@ -26,7 +26,7 @@ votes = {"yes": 0, "no": 0, "maybe": 0}
 
 @app.route("/")
 def index():
-    return(render_template("index.html", votes=votes, channel_list=channel_list, chats_in_rooms=chats_in_rooms, number_of_chats=len(channel_list)))
+    return(render_template("index.html", user_current_room=0, votes=votes, channel_list=channel_list, chats_in_rooms=chats_in_rooms, number_of_chats=len(channel_list)))
 
 @socketio.on("submit vote")
 def vote(data):

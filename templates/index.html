@@ -41,7 +41,7 @@
             </section>
             <section>
                 <div id="chathistory-area">
-                    {% for result in chats_in_rooms[0] %}
+                    {% for result in chats_in_rooms[user_current_room] %}
                       <div>{{result}}</div>
                     {% endfor %}
 
