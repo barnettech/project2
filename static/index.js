@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelector('#button1').style.visibility = 'visible';
     }
     document.querySelector('#channel-listing a button').classList.add('active');
+    var activeChatRoom = 'Lobby';
     // Connect to websocket
     var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
 
@@ -41,13 +42,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 allchannelbuttons2[i].classList.remove('active');
             }
             this.classList.add('active');
+            var activeChatRoom = this.textContent;
+            console.log('active chat room is ' + activeChatRoom);
           });
         }
 
         document.querySelector("#button0").onclick = () => {
                 var username = document.querySelector('#username').value;
                 localStorage.setItem('username', username);
-                localStorage.setItem('key', 'value');
                 document.querySelector('#username').style.visibility = 'hidden';
                 document.querySelector('#button0').style.visibility = 'hidden';
                 document.querySelector('#textarena').style.visibility = 'visible';
@@ -57,10 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelector("#button2").onclick = () => {
                 console.log('add a channel');
                 const newchannel = document.querySelector('#newchannel').value;
-                //var element = document.querySelector('#channel-buttons');
-                //var element2 = document.createElement("button");
-                //document.querySelector('#channel-buttons').createElement('<a href="#"><button type="button" class="btn btn-info">{{result}}</button><a href="#">');
-                document.getElementById('channel-buttons').innerHTML += '<a href="#"><button type="button" class="btn btn-info">' + newchannel + '</button><a href="#">';
+                var activeChatRoom = newchannel;
                 socket.emit('add channel', {'newchannel': newchannel});
 
                 var parent = document.createElement("div");
@@ -79,6 +78,7 @@ parent.append("Some text", p);
     // When new text is chatted, broadcast it to all
     socket.on('chat emit', data => {
         document.querySelector('#chathistory-area').innerHTML += '<div>' + data + '</div>';
+        document.getElementById('channel-buttons').innerHTML += '<a href="#"><button type="button" class="btn btn-info">' + newchannel + '</button><a href="#">';
     });
 
     socket.on('new channel', data => {
