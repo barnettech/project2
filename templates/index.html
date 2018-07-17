@@ -40,7 +40,12 @@
               <button id="button1">Submit</button>
             </section>
             <section>
-                <div id="chathistory-area"></div>
+                <div id="chathistory-area">
+                    {% for result in chats_in_rooms[0] %}
+                      <div>{{result}}</div>
+                    {% endfor %}
+
+                </div>
             </section>
         </container>
     </body>

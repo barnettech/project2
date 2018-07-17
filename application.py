@@ -14,14 +14,19 @@ app = Flask(__name__)
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 socketio = SocketIO(app)
 
-# nested list of lists to store channels, last 100 chats for a channel, and those present in the chat room
-channel_list = [['Lobby', 'test'], ['Chat1', 'Chat2', 'Chat3'], ['Jim', 'Jon', 'Bob']]
+# list of chat rooms
+channel_list = [['Lobby', 'test']]
+# matrix of messages in each given chat room
+chats_in_rooms = [['Lobby', 'Welcome!', 'To the lobby']]
+# matrix of persons in each given chat room
+persons_in_rooms = [['Lobby']]
+
 
 votes = {"yes": 0, "no": 0, "maybe": 0}
 
 @app.route("/")
 def index():
-    return(render_template("index.html", votes=votes, channel_list=channel_list))
+    return(render_template("index.html", votes=votes, channel_list=channel_list, chats_in_rooms=chats_in_rooms))
 
 @socketio.on("submit vote")
 def vote(data):
