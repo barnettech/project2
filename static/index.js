@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     console.log(localStorage.getItem('username'));
+    document.querySelector("#textarena").value = '';
     if (localStorage.getItem('username') === null) {
       document.querySelector('#username').style.visibility = 'visible';
       document.querySelector('#button0').style.visibility = 'visible';
@@ -15,6 +16,13 @@ document.addEventListener('DOMContentLoaded', () => {
     var activeChatRoom = 'Lobby';
     // Connect to websocket
     var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
+    document.querySelector("#textarena").onclick = () => {
+      document.querySelector("#textarena").focus();
+      console.log(document.querySelector("#textarena").value.length);
+    if(document.querySelector("#textarena").value.length < 1) {
+        document.querySelector("#textarena").setSelectionRange(0, 0);
+      }
+    }
 
     // When connected, configure buttons
     socket.on('connect', () => {
@@ -30,7 +38,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 // var chattext = document.getElementById("textarena").value;
                 const chattext = document.querySelector('#textarena').value;
                 let username = localStorage.getItem('username');
-                console.log(username);
+                document.querySelector('#textarena').value = '';
+                document.querySelector('#textarena').focus();
                 socket.emit('chat emit', {'chattext': username + ': ' + chattext});
             };
 
@@ -61,10 +70,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 const newchannel = document.querySelector('#newchannel').value;
                 var activeChatRoom = newchannel;
                 socket.emit('add channel', {'newchannel': newchannel});
-
-                var parent = document.createElement("div");
-var p = document.createElement("p");
-parent.append("Some text", p);
             };
     });
 
@@ -78,10 +83,10 @@ parent.append("Some text", p);
     // When new text is chatted, broadcast it to all
     socket.on('chat emit', data => {
         document.querySelector('#chathistory-area').innerHTML += '<div>' + data + '</div>';
-        document.getElementById('channel-buttons').innerHTML += '<a href="#"><button type="button" class="btn btn-info">' + newchannel + '</button><a href="#">';
     });
 
     socket.on('new channel', data => {
         console.log('added new channel ' + data);
+        document.getElementById('channel-buttons').innerHTML += '<a href="#"><button type="button" class="btn btn-info">' + data + '</button><a href="#">';
     });
 });

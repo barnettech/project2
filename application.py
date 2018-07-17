@@ -40,6 +40,8 @@ def chat(data):
     print(data)
     chattext = data["chattext"]
     print(chattext)
+    chats_in_rooms[0].append(chattext.rstrip())
+    print(chats_in_rooms)
     emit("chat emit", chattext, broadcast=True)
 
 @socketio.on("add channel")
