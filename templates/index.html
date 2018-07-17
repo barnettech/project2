@@ -24,8 +24,8 @@
                 <h3>Channel Listing:</h3>
                 <div id="channel-buttons">
                   {% for result in channel_list[0] %}
-                      <a href="#"><button type="button" class="btn btn-info">{{result}}</button><a href="#">
-                  {% endfor %} <br/><br/>
+                      <a href="#"><button id="button-selector{{loop.index-1}}" type="button" class="btn btn-info">{{result}}</button><a href="#">
+                  {% endfor %}
                 </div>
                 <div>Add New Channel:  <input type="text" id="newchannel" name="newchannel"> <button id="button2">Submit</button></div>
 

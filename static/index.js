@@ -1,4 +1,14 @@
 document.addEventListener('DOMContentLoaded', () => {
+    var chatroomCount = 0;
+    if(localStorage.getItem('activeroom') === null) {
+      localStorage.setItem('activeroom', 0);
+      document.querySelector('#button-selector0').classList.add('active');
+    }
+    else {
+      let selector = '#button-selector' + localStorage.getItem('activeroom');
+      console.log('selector is ' + selector);
+      document.querySelector(selector).classList.add('active');
+    }
     console.log(localStorage.getItem('username'));
     document.querySelector("#textarena").value = '';
     if (localStorage.getItem('username') === null) {
@@ -12,7 +22,6 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelector('#textarena').style.visibility = 'visible';
         document.querySelector('#button1').style.visibility = 'visible';
     }
-    document.querySelector('#channel-listing a button').classList.add('active');
     var activeChatRoom = 'Lobby';
     // Connect to websocket
     var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
@@ -36,11 +45,15 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         document.querySelector("#button1").onclick = () => {
                 // var chattext = document.getElementById("textarena").value;
-                const chattext = document.querySelector('#textarena').value;
+                let chattext = document.querySelector('#textarena').value;
                 let username = localStorage.getItem('username');
                 document.querySelector('#textarena').value = '';
                 document.querySelector('#textarena').focus();
-                socket.emit('chat emit', {'chattext': username + ': ' + chattext});
+                let room_selected_selector = localStorage.getItem('activeroom');
+                let room_number = room_selected_selector.match(/\d+/)[0];
+                console.log('the number extracted is ' + room_number);
+                chattext = username + ': ' + chattext
+                socket.emit('chat emit', {'chattext': chattext , 'channel_number': room_number});
             };
 
         var allchannelbuttons = document.querySelectorAll("#channel-buttons button");
@@ -50,9 +63,15 @@ document.addEventListener('DOMContentLoaded', () => {
             for (var i = 0; i < allchannelbuttons2.length; i++) {
                 allchannelbuttons2[i].classList.remove('active');
             }
+
             this.classList.add('active');
+            localStorage.setItem('activeroom', this.getAttribute("id"));
             var activeChatRoom = this.textContent;
             console.log('active chat room is ' + activeChatRoom);
+            let room_selected_selector = localStorage.getItem('activeroom');
+            let room_number = room_selected_selector.match(/\d+/)[0];
+            console.log('the number extracted is ' + room_number);
+            socket.emit('change channel', {'channel_number': room_number});
           });
         }
 
@@ -82,11 +101,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // When new text is chatted, broadcast it to all
     socket.on('chat emit', data => {
-        document.querySelector('#chathistory-area').innerHTML += '<div>' + data + '</div>';
+        console.log('room number is ' + data.channel_number);
+        document.querySelector('#chathistory-area').innerHTML += '<div>' + data.chattext + '</div>';
     });
 
     socket.on('new channel', data => {
         console.log('added new channel ' + data);
-        document.getElementById('channel-buttons').innerHTML += '<a href="#"><button type="button" class="btn btn-info">' + data + '</button><a href="#">';
+        chatroomCount = chatroomCount + 1;
+        document.getElementById('channel-buttons').innerHTML += '<a href="#"><button id="#button-selector' + chatroomCount + '" type="button" class="btn btn-info">' + data + '</button><a href="#">';
+    });
+
+    socket.on('change channel', data => {
+        console.log('changed the channel, ' + data);
     });
 });
