@@ -47,6 +47,9 @@ def chat(data):
 def addchannel(data):
     newchannel = data["newchannel"]
     channel_list[0].append(newchannel)
+    y = [newchannel, "Welcome"]
+    chats_in_rooms.append(y)
+    print(chats_in_rooms)
     emit("new channel", newchannel, broadcast=True)
 
 @socketio.on("change channel")

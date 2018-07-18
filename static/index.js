@@ -1,11 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
-    var chatroomCount = 0;
     if(localStorage.getItem('activeroom') === null) {
       localStorage.setItem('activeroom', 0);
       document.querySelector('#button-selector0').classList.add('active');
     }
     else {
-      let selector = '#' + localStorage.getItem('activeroom');
+      let selector = '#button-selector' + localStorage.getItem('activeroom');
       console.log('selector is ' + selector);
       document.querySelector(selector).classList.add('active');
     }
@@ -68,10 +67,13 @@ document.addEventListener('DOMContentLoaded', () => {
             var allchannelbuttons2 = document.querySelectorAll("#channel-buttons button");
             for (var i = 0; i < allchannelbuttons2.length; i++) {
                 allchannelbuttons2[i].classList.remove('active');
+
             }
 
             this.classList.add('active');
-            localStorage.setItem('activeroom', this.getAttribute("id"));
+            room = this.getAttribute("id");
+            let roomid = room.match(/\d+/)[0];
+            localStorage.setItem('activeroom', roomid);
             var activeChatRoom = this.textContent;
             console.log('active chat room is ' + activeChatRoom);
             let room_selected_selector = localStorage.getItem('activeroom');
@@ -118,7 +120,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     socket.on('new channel', data => {
         console.log('added new channel ' + data);
-        chatroomCount = chatroomCount + 1;
+        var allchannelbuttons = document.querySelectorAll("#channel-buttons button");
+        var chatroomCount = allchannelbuttons.length;
         document.getElementById('channel-buttons').innerHTML += '<a href="#"><button id="#button-selector' + chatroomCount + '" type="button" class="btn btn-info">' + data + '</button><a href="#">';
     });
 
