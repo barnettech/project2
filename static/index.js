@@ -5,10 +5,11 @@ document.addEventListener('DOMContentLoaded', () => {
       document.querySelector('#button-selector0').classList.add('active');
     }
     else {
-      let selector = '#button-selector' + localStorage.getItem('activeroom');
+      let selector = '#' + localStorage.getItem('activeroom');
       console.log('selector is ' + selector);
       document.querySelector(selector).classList.add('active');
     }
+
     console.log(localStorage.getItem('username'));
     document.querySelector("#textarena").value = '';
     if (localStorage.getItem('username') === null) {
@@ -35,7 +36,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // When connected, configure buttons
     socket.on('connect', () => {
-
         // Each button should emit a "submit vote" event
         document.querySelectorAll('.button0').forEach(button => {
             button.onclick = () => {
@@ -43,6 +43,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 socket.emit('submit vote', {'selection': selection});
             };
         });
+        console.log(':46');
+        var activeroom = localStorage.getItem('activeroom');
+        let room_number = activeroom.match(/\d+/)[0];
+        console.log('room number is ' + room_number);
+        socket.emit('change channel', {'channel_number': room_number});
+
         document.querySelector("#button1").onclick = () => {
                 // var chattext = document.getElementById("textarena").value;
                 let chattext = document.querySelector('#textarena').value;
@@ -92,6 +98,11 @@ document.addEventListener('DOMContentLoaded', () => {
             };
     });
 
+
+    socket.on('get chats', data => {
+        console.log('get rooms chats:, ' + data);
+    });
+
     // When a new vote is announced, increase the count
     socket.on('vote totals', data => {
         document.querySelector('#yes').innerHTML = data.yes;
@@ -112,6 +123,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     socket.on('change channel', data => {
-        console.log('changed the channel, ' + data);
+        console.log('channel, ' + data);
+        document.querySelector('#chathistory-area').innerHTML = data;
     });
 });
