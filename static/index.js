@@ -16,11 +16,13 @@ document.addEventListener('DOMContentLoaded', () => {
       document.querySelector('#button0').style.visibility = 'visible';
       document.querySelector('#textarena').style.visibility = 'hidden';
       document.querySelector('#button1').style.visibility = 'hidden';
+      document.querySelector('#username-line').style.visibility = 'visible';
     } else {
         document.querySelector('#username').style.visibility = 'hidden';
         document.querySelector('#button0').style.visibility = 'hidden';
         document.querySelector('#textarena').style.visibility = 'visible';
         document.querySelector('#button1').style.visibility = 'visible';
+        document.querySelector('#username-line').style.visibility = 'hidden';
     }
     var activeChatRoom = 'Lobby';
     // Connect to websocket

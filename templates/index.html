@@ -10,43 +10,38 @@
     </head>
     <body>
         <h1 class="jumbotron">ChatApp</h1>
-        <container>
-            <section>
-              <div>Yes Votes: <span id="yes">{{ votes["yes"] }}</span></div>
-              <div>No Votes: <span id="no">{{ votes["no"] }}</span></div>
-              <div>Maybe Votes: <span id="maybe">{{ votes["maybe"] }}<span></div>
-              <hr>
-              <button class="button0" data-vote="yes">Yes</button>
-              <button class="button0" data-vote="no">No</button>
-              <button class="button0" data-vote="maybe">Maybe</button><br/>
-            </section>
-            <section id="channel-listing">
-                <h3>Channel Listing:</h3>
-                <div id="channel-buttons">
-                  {% for result in channel_list[0] %}
-                      <a href="#"><button id="button-selector{{loop.index-1}}" type="button" class="btn btn-info">{{result}}</button><a href="#">
+        <div class="container">
+          <div class="row">
+            <div class="col-5">
+              <section id="channel-listing">
+                    <h3>Channel Listing:</h3>
+                    <div id="channel-buttons">
+                      {% for result in channel_list[0] %}
+                        <a href="#"><button id="button-selector{{loop.index-1}}" type="button" class="btn btn-info">{{result}}</button></a>
+                      {% endfor %}
+                    </div>
+                    <div>Add New Channel:  <input type="text" id="newchannel" name="newchannel"> <button id="button2">Submit</button></div>
+                </section>
+                <section>
+                  <div id="username-line">Type in a username to use in the chat:  <input type="text" id="username" name="username"> <button id="button0">Submit</button></div> <br>
+                  <br/>
+                  <br/>
+                </section>
+            </div>
+            <div class="col-5">
+              <section>
+                <h3>Enter the chat below:</h3>
+                <textarea id="textarena" rows="2" cols="50">
+                </textarea><br/>
+                <button id="button1">Submit</button>
+                <div id="chathistory-area">
+                  {% for result in chats_in_rooms[user_current_room] %}
+                    <div>{{result}}</div>
                   {% endfor %}
                 </div>
-                <div>Add New Channel:  <input type="text" id="newchannel" name="newchannel"> <button id="button2">Submit</button></div>
-
-            </section>
-
-            <section>
-            Type in a username to use in the chat:  <input type="text" id="username" name="username"> <button id="button0">Submit</button> <br>
-              <br/>
-              <br/>
-              <textarea id="textarena" rows="2" cols="50">
-              </textarea><br/>
-              <button id="button1">Submit</button>
-            </section>
-            <section>
-                <div id="chathistory-area">
-                    {% for result in chats_in_rooms[user_current_room] %}
-                      <div>{{result}}</div>
-                    {% endfor %}
-
-                </div>
-            </section>
-        </container>
+              </section>
+            </div>
+          </div>
+        </div>
     </body>
 </html>
