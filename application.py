@@ -57,3 +57,17 @@ def changechannel(data):
     channel_number = int(data["channel_number"])
     chats_in_this_room = chats_in_rooms[channel_number]
     emit("change channel", chats_in_this_room, broadcast=True)
+
+@socketio.on("on fly")
+def onfly(data):
+    keyD = int(data["keyD"])
+    keyS = int(data["keyS"])
+    keyA = int(data["keyA"])
+    keyW = int(data["keyW"])
+    print('here :67')
+    print(data)
+    print(keyD)
+    print(keyS)
+    print(keyA)
+    print(keyW)
+    emit("on fly", {'keyD':keyD, 'keyS':keyS, 'keyA':keyA, 'keyW':keyW}, broadcast=True)

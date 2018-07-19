@@ -1,3 +1,11 @@
+var moveX = 20;
+var moveY = 20;
+
+var keyW = false;
+var keyA = false;
+var keyS = false;
+var keyD = false;
+
 document.addEventListener('DOMContentLoaded', () => {
     if(localStorage.getItem('activeroom') === null) {
       localStorage.setItem('activeroom', 0);
@@ -5,7 +13,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     else {
       let selector = '#button-selector' + localStorage.getItem('activeroom');
-      console.log('selector is ' + selector);
       document.querySelector(selector).classList.add('active');
     }
 
@@ -31,11 +38,13 @@ document.addEventListener('DOMContentLoaded', () => {
     var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
     document.querySelector("#textarena").onclick = () => {
       document.querySelector("#textarena").focus();
-      console.log(document.querySelector("#textarena").value.length);
     if(document.querySelector("#textarena").value.length < 1) {
         document.querySelector("#textarena").setSelectionRange(0, 0);
       }
     }
+    // code to fly the ship, democratically, whomever hits awsd first is the captain!
+    //event listener
+    window.addEventListener("keydown", onKeyDown, false);
 
     // When connected, configure buttons
     socket.on('connect', () => {
@@ -49,18 +58,15 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log(':46');
         var activeroom = localStorage.getItem('activeroom');
         let room_number = activeroom.match(/\d+/)[0];
-        console.log('room number is ' + room_number);
         socket.emit('change channel', {'channel_number': room_number});
 
         document.querySelector("#button1").onclick = () => {
-                // var chattext = document.getElementById("textarena").value;
                 let chattext = document.querySelector('#textarena').value;
                 let username = localStorage.getItem('username');
                 document.querySelector('#textarena').value = '';
                 document.querySelector('#textarena').focus();
                 let room_selected_selector = localStorage.getItem('activeroom');
                 let room_number = room_selected_selector.match(/\d+/)[0];
-                console.log('the number extracted is ' + room_number);
                 chattext = username + ': ' + chattext
                 socket.emit('chat emit', {'chattext': chattext , 'channel_number': room_number});
             };
@@ -79,10 +85,8 @@ document.addEventListener('DOMContentLoaded', () => {
             let roomid = room.match(/\d+/)[0];
             localStorage.setItem('activeroom', roomid);
             var activeChatRoom = this.textContent;
-            console.log('active chat room is ' + activeChatRoom);
             let room_selected_selector = localStorage.getItem('activeroom');
             let room_number = room_selected_selector.match(/\d+/)[0];
-            console.log('the number extracted is ' + room_number);
             socket.emit('change channel', {'channel_number': room_number});
           });
         }
@@ -98,16 +102,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.querySelector('#username-line').style.visibility = 'hidden';
             };
         document.querySelector("#button2").onclick = () => {
-                console.log('add a channel');
                 const newchannel = document.querySelector('#newchannel').value;
                 var activeChatRoom = newchannel;
                 socket.emit('add channel', {'newchannel': newchannel});
             };
-    });
-
-
-    socket.on('get chats', data => {
-        console.log('get rooms chats:, ' + data);
+        document.querySelector("#button-ship").onclick = () => {
+          draw();
+        }
     });
 
     // When a new vote is announced, increase the count
@@ -143,17 +144,109 @@ document.addEventListener('DOMContentLoaded', () => {
             let roomid = room.match(/\d+/)[0];
             localStorage.setItem('activeroom', roomid);
             var activeChatRoom = this.textContent;
-            console.log('active chat room is ' + activeChatRoom);
             let room_selected_selector = localStorage.getItem('activeroom');
             let room_number = room_selected_selector.match(/\d+/)[0];
-            console.log('the number extracted is ' + room_number);
             socket.emit('change channel', {'channel_number': room_number});
           });
         }
     });
 
     socket.on('change channel', data => {
-        console.log('channel, ' + data);
         document.querySelector('#chathistory-area').innerHTML = data;
     });
+
+    socket.on('on fly', data => {
+        console.log('channel, ' + data);
+        let keyD = data.keyD;
+        let keyS = data.keyS;
+        let keyA = data.keyA;
+        let keyW = data.keyW;
+        fly(keyD, keyS, keyA, keyW);
+
+    });
 });
+
+// https://stackoverflow.com/questions/20567342/how-to-create-a-canvas-animation-with-one-moving-triangle-rectangle
+(function() {
+  var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
+    window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
+  window.requestAnimationFrame = requestAnimationFrame;
+})();
+
+function onKeyDown(event) {
+  var keyCode = event.keyCode;
+  switch (keyCode) {
+    case 68: //d
+      keyD = true;
+      break;
+    case 83: //s
+      keyS = true;
+      break;
+    case 65: //a
+      keyA = true;
+      break;
+    case 87: //w
+      keyW = true;
+      break;
+  }
+}
+
+function draw() {
+  window.requestAnimationFrame(draw);
+  var canvas = document.getElementById('canvas');
+  var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
+  if (canvas.getContext) {
+    var ctx = canvas.getContext('2d');
+
+    if (keyD == true) {
+      socket.emit('on fly', {'keyD': true, 'keyS': false, 'keyA': false, 'keyW': false});
+      keyD = false;
+    }
+    if (keyS == true) {
+      socket.emit('on fly', {'keyD': false, 'keyS': true, 'keyA': false, 'keyW': false});
+      keyS = false;
+    }
+    if (keyA == true) {
+      socket.emit('on fly', {'keyD': false, 'keyS': false, 'keyA': true, 'keyW': false});
+      keyA = false;
+    }
+    if (keyW == true) {
+      socket.emit('on fly', {'keyD': false, 'keyS': false, 'keyA': false, 'keyW': true});
+      keyW = false;
+    }
+
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    ctx.beginPath();
+    ctx.fillStyle = "rgba(0,204,142,0.5)";
+    ctx.moveTo(75 + moveX, 50 + moveY);
+    ctx.lineTo(100 + moveX, 75 + moveY);
+    ctx.lineTo(100 + moveX, 25 + moveY);
+    ctx.scale(1,1);
+    ctx.rotate(Math.PI / 1);
+    ctx.fill();
+  }
+}
+
+function fly(keyD, keyS, keyA, keyW) {
+  window.requestAnimationFrame(draw);
+  var canvas = document.getElementById('canvas');
+  var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
+  if (canvas.getContext) {
+    var ctx = canvas.getContext('2d');
+
+    if (keyD == true) {
+      moveX += 10 ;
+    }
+    if (keyS == true) {
+      moveY += 10;
+    }
+    if (keyA == true) {
+      moveX -= 10;
+    }
+    if (keyW == true) {
+      moveY -= 10;
+    }
+  }
+}
+
+window.requestAnimationFrame(draw);
