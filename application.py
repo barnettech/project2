@@ -19,7 +19,7 @@ votes = {"yes": 0, "no": 0, "maybe": 0}
 # list of chat rooms
 channel_list = [['Lobby', 'test']]
 # matrix of messages in each given chat room
-chats_in_rooms = [['Lobby', 'Welcome!', 'To the lobby'], ['Room 2', 'Welcome']]
+chats_in_rooms = [['Lobby', 'Welcome!', 'To the lobby']]
 # matrix of persons in each given chat room
 persons_in_rooms = [['Lobby']]
 

@@ -123,6 +123,28 @@ document.addEventListener('DOMContentLoaded', () => {
         var allchannelbuttons = document.querySelectorAll("#channel-buttons button");
         var chatroomCount = allchannelbuttons.length;
         document.getElementById('channel-buttons').innerHTML += '<a href="#"><button id="#button-selector' + chatroomCount + '" type="button" class="btn btn-info">' + data + '</button><a href="#">';
+
+        var allchannelbuttons = document.querySelectorAll("#channel-buttons button");
+        for (var i = 0; i < allchannelbuttons.length; i++) {
+          allchannelbuttons[i].addEventListener('click', function(event) {
+            var allchannelbuttons2 = document.querySelectorAll("#channel-buttons button");
+            for (var i = 0; i < allchannelbuttons2.length; i++) {
+                allchannelbuttons2[i].classList.remove('active');
+
+            }
+
+            this.classList.add('active');
+            room = this.getAttribute("id");
+            let roomid = room.match(/\d+/)[0];
+            localStorage.setItem('activeroom', roomid);
+            var activeChatRoom = this.textContent;
+            console.log('active chat room is ' + activeChatRoom);
+            let room_selected_selector = localStorage.getItem('activeroom');
+            let room_number = room_selected_selector.match(/\d+/)[0];
+            console.log('the number extracted is ' + room_number);
+            socket.emit('change channel', {'channel_number': room_number});
+          });
+        }
     });
 
     socket.on('change channel', data => {
