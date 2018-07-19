@@ -17,12 +17,14 @@ document.addEventListener('DOMContentLoaded', () => {
       document.querySelector('#textarena').style.visibility = 'hidden';
       document.querySelector('#button1').style.visibility = 'hidden';
       document.querySelector('#username-line').style.visibility = 'visible';
+      document.querySelector('#thechatarea').style.visibility = 'hidden';
     } else {
         document.querySelector('#username').style.visibility = 'hidden';
         document.querySelector('#button0').style.visibility = 'hidden';
         document.querySelector('#textarena').style.visibility = 'visible';
         document.querySelector('#button1').style.visibility = 'visible';
         document.querySelector('#username-line').style.visibility = 'hidden';
+        document.querySelector('#thechatarea').style.visibility = 'visible';
     }
     var activeChatRoom = 'Lobby';
     // Connect to websocket
@@ -92,7 +94,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.querySelector('#button0').style.visibility = 'hidden';
                 document.querySelector('#textarena').style.visibility = 'visible';
                 document.querySelector('#button1').style.visibility = 'visible';
-                //socket.emit('chat emit', {'chattext': chattext});
+                document.querySelector('#thechatarea').style.visibility = 'visible';
+                document.querySelector('#username-line').style.visibility = 'hidden';
             };
         document.querySelector("#button2").onclick = () => {
                 console.log('add a channel');
