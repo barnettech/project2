@@ -155,7 +155,12 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     socket.on('change channel', data => {
-        document.querySelector('#chathistory-area').innerHTML = data;
+        console.log(data);
+        var chatobject = '';
+        for(var i = 0; i < data.length; i++) {
+          chatobject += data[i] + '<br/>';
+        }
+        document.querySelector('#chathistory-area').innerHTML = chatobject;
     });
 
     socket.on('on fly', data => {
@@ -242,7 +247,6 @@ function draw() {
     ctx.strokeStyle = "#96FF00";
     ctx.fillRect(0, 0, ctx.width, ctx.height);
     //ctx.fillStyle = "blue";
-    console.log('angle is ' + angle);
     ctx.rotate(angle);
     angle = 0;
     ctx.moveTo(75 + moveX, 50 + moveY);

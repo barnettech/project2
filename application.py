@@ -1,7 +1,7 @@
 import os
 import requests
 
-from flask import Flask, jsonify, render_template, request, session
+from flask import Flask, json, jsonify, render_template, request, session
 from flask_session import Session
 from flask_socketio import SocketIO, emit
 
@@ -55,7 +55,7 @@ def addchannel(data):
 @socketio.on("change channel")
 def changechannel(data):
     channel_number = int(data["channel_number"])
-    chats_in_this_room = chats_in_rooms[channel_number]
+    chats_in_this_room = json.dumps(chats_in_rooms[channel_number])
     emit("change channel", chats_in_this_room, broadcast=True)
 
 @socketio.on("on fly")
