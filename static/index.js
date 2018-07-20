@@ -1,10 +1,13 @@
 var moveX = 20;
 var moveY = 20;
+var angle = 0;
 
 var keyW = false;
 var keyA = false;
 var keyS = false;
 var keyD = false;
+var keyLeft = false;
+var keyRight = false;
 
 document.addEventListener('DOMContentLoaded', () => {
     if(localStorage.getItem('activeroom') === null) {
@@ -106,9 +109,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 var activeChatRoom = newchannel;
                 socket.emit('add channel', {'newchannel': newchannel});
             };
-        document.querySelector("#button-ship").onclick = () => {
+        /*document.querySelector("#button-ship").onclick = () => {
           draw();
-        }
+        }*/
     });
 
     // When a new vote is announced, increase the count
@@ -161,7 +164,11 @@ document.addEventListener('DOMContentLoaded', () => {
         let keyS = data.keyS;
         let keyA = data.keyA;
         let keyW = data.keyW;
-        fly(keyD, keyS, keyA, keyW);
+        let keyLeft = data.keyLeft;
+        let keyRight = data.keyRight;
+        console.log('keyLeft is ' + keyLeft);
+        console.log('keyRight is ' + keyRight);
+        fly(keyD, keyS, keyA, keyW, keyLeft, keyRight);
 
     });
 });
@@ -188,6 +195,12 @@ function onKeyDown(event) {
     case 87: //w
       keyW = true;
       break;
+    case 37:
+      keyLeft = true;
+      break;
+    case 39:
+      keyRight = true;
+      break;
   }
 }
 
@@ -199,27 +212,41 @@ function draw() {
     var ctx = canvas.getContext('2d');
 
     if (keyD == true) {
-      socket.emit('on fly', {'keyD': true, 'keyS': false, 'keyA': false, 'keyW': false});
+      socket.emit('on fly', {'keyD': true, 'keyS': false, 'keyA': false, 'keyW': false, 'keyLeft': false, 'keyRight': false});
       keyD = false;
     }
     if (keyS == true) {
-      socket.emit('on fly', {'keyD': false, 'keyS': true, 'keyA': false, 'keyW': false});
+      socket.emit('on fly', {'keyD': false, 'keyS': true, 'keyA': false, 'keyW': false, 'keyLeft': false, 'keyRight': false});
       keyS = false;
     }
     if (keyA == true) {
-      socket.emit('on fly', {'keyD': false, 'keyS': false, 'keyA': true, 'keyW': false});
+      socket.emit('on fly', {'keyD': false, 'keyS': false, 'keyA': true, 'keyW': false, 'keyLeft': false, 'keyRight': false});
       keyA = false;
     }
     if (keyW == true) {
-      socket.emit('on fly', {'keyD': false, 'keyS': false, 'keyA': false, 'keyW': true});
+      socket.emit('on fly', {'keyD': false, 'keyS': false, 'keyA': false, 'keyW': true, 'keyLeft': false, 'keyRight': false});
       keyW = false;
+    }
+    if (keyLeft == true) {
+      socket.emit('on fly', {'keyD': false, 'keyS': false, 'keyA': false, 'keyW': false, 'keyLeft': true, 'keyRight': false});
+      keyLeft = false;
+    }
+    if (keyRight == true) {
+      socket.emit('on fly', {'keyD': false, 'keyS': false, 'keyA': false, 'keyW': false, 'keyLeft': false, 'keyRight': true});
+      keyRight = false;
     }
 
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     ctx.beginPath();
-    ctx.fillStyle = "rgba(0,204,142,0.5)";
+    ctx.fillStyle = "rgba(0, 0, 255, 0.8)";
+    ctx.strokeStyle = "#96FF00";
+    ctx.fillRect(0, 0, ctx.width, ctx.height);
+    //ctx.fillStyle = "blue";
+    console.log('angle is ' + angle);
+    ctx.rotate(angle);
+    angle = 0;
     ctx.moveTo(75 + moveX, 50 + moveY);
-    ctx.lineTo(100 + moveX, 75 + moveY);
+    ctx.lineTo(125 + moveX, 50 + moveY);
     ctx.lineTo(100 + moveX, 25 + moveY);
     ctx.scale(1,1);
     ctx.rotate(Math.PI / 1);
@@ -227,7 +254,7 @@ function draw() {
   }
 }
 
-function fly(keyD, keyS, keyA, keyW) {
+function fly(keyD, keyS, keyA, keyW, keyLeft, keyRight) {
   window.requestAnimationFrame(draw);
   var canvas = document.getElementById('canvas');
   var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
@@ -245,6 +272,12 @@ function fly(keyD, keyS, keyA, keyW) {
     }
     if (keyW == true) {
       moveY -= 10;
+    }
+    if (keyLeft == true) {
+      angle-=(Math.PI/3)/10;
+    }
+    if (keyRight == true) {
+      angle+=(Math.PI/3)/10;
     }
   }
 }
