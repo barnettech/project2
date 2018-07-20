@@ -19,7 +19,6 @@ document.addEventListener('DOMContentLoaded', () => {
       document.querySelector(selector).classList.add('active');
     }
 
-    console.log(localStorage.getItem('username'));
     document.querySelector("#textarena").value = '';
     if (localStorage.getItem('username') === null) {
       document.querySelector('#username').style.visibility = 'visible';
@@ -58,7 +57,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 socket.emit('submit vote', {'selection': selection});
             };
         });
-        console.log(':46');
         var activeroom = localStorage.getItem('activeroom');
         let room_number = activeroom.match(/\d+/)[0];
         socket.emit('change channel', {'channel_number': room_number});
@@ -123,12 +121,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // When new text is chatted, broadcast it to all
     socket.on('chat emit', data => {
-        console.log('room number is ' + data.channel_number);
         document.querySelector('#chathistory-area').innerHTML += '<div>' + data.chattext + '</div>';
     });
 
     socket.on('new channel', data => {
-        console.log('added new channel ' + data);
         var allchannelbuttons = document.querySelectorAll("#channel-buttons button");
         var chatroomCount = allchannelbuttons.length;
         document.getElementById('channel-buttons').innerHTML += '<a href="#"><button id="#button-selector' + chatroomCount + '" type="button" class="btn btn-info">' + data + '</button><a href="#">';
@@ -155,7 +151,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     socket.on('change channel', data => {
-        console.log(data);
         var chatobject = '';
         for(var i = 0; i < data.length; i++) {
           chatobject += data[i] + '<br/>';
@@ -164,15 +159,12 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     socket.on('on fly', data => {
-        console.log('channel, ' + data);
         let keyD = data.keyD;
         let keyS = data.keyS;
         let keyA = data.keyA;
         let keyW = data.keyW;
         let keyLeft = data.keyLeft;
         let keyRight = data.keyRight;
-        console.log('keyLeft is ' + keyLeft);
-        console.log('keyRight is ' + keyRight);
         fly(keyD, keyS, keyA, keyW, keyLeft, keyRight);
 
     });
