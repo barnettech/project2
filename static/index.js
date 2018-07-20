@@ -160,7 +160,7 @@ document.addEventListener('DOMContentLoaded', () => {
         for(var i = 0; i < data.length; i++) {
           chatobject += data[i] + '<br/>';
         }
-        document.querySelector('#chathistory-area').innerHTML = chatobject;
+        document.querySelector('#chathistory-area').innerHTML = data;
     });
 
     socket.on('on fly', data => {

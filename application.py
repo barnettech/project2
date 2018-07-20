@@ -55,8 +55,9 @@ def addchannel(data):
 @socketio.on("change channel")
 def changechannel(data):
     channel_number = int(data["channel_number"])
-    chats_in_this_room = json.dumps(chats_in_rooms[channel_number])
-    emit("change channel", chats_in_this_room, broadcast=True)
+    chats_in_this_room = chats_in_rooms[channel_number]
+    chats_in_room = '<br>'.join(chats_in_this_room)
+    emit("change channel", chats_in_room, broadcast=True)
 
 @socketio.on("on fly")
 def onfly(data):
