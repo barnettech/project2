@@ -115,8 +115,22 @@ document.addEventListener('DOMContentLoaded', () => {
         // code to add channels
         document.querySelector("#button2").onclick = () => {
                 const newchannel = document.querySelector('#newchannel').value;
+                var allchannelbuttons = document.querySelectorAll("#channel-buttons button");
+                let match = false;
+                for (var i = 0; i < allchannelbuttons.length; i++) {
+                  if(allchannelbuttons[i].innerText == newchannel) {
+                    match = true;
+                  }
+                }
                 var activeChatRoom = newchannel;
-                socket.emit('add channel', {'newchannel': newchannel});
+                // make sure there isn't a channel by that name already
+                // to avoid duplicates and confusions.
+                if(match) {
+                  alert('there is already a channel by that name');
+                }
+                else {
+                  socket.emit('add channel', {'newchannel': newchannel});
+                }
             };
         /*document.querySelector("#button-ship").onclick = () => {
           draw();
