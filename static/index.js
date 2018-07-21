@@ -1,7 +1,10 @@
+// for moving the asteroids spaceship set all the variables
+// speed of ship movement.
 var moveX = 20;
 var moveY = 20;
 var angle = 0;
 
+// set key movements to false, when true, the ship moves.
 var keyW = false;
 var keyA = false;
 var keyS = false;
@@ -9,7 +12,10 @@ var keyD = false;
 var keyLeft = false;
 var keyRight = false;
 
+// When the document loads, do stuff!
 document.addEventListener('DOMContentLoaded', () => {
+    // upon loading find out which room is the active room, remembers
+    // which room you were in last in localstorage as well.
     if(localStorage.getItem('activeroom') === null) {
       localStorage.setItem('activeroom', 0);
       document.querySelector('#button-selector0').classList.add('active');
@@ -19,6 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
       document.querySelector(selector).classList.add('active');
     }
 
+    // only show the textarena once the user picks a username
     document.querySelector("#textarena").value = '';
     if (localStorage.getItem('username') === null) {
       document.querySelector('#username').style.visibility = 'visible';
@@ -35,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelector('#username-line').style.visibility = 'hidden';
         document.querySelector('#thechatarea').style.visibility = 'visible';
     }
-    var activeChatRoom = 'Lobby';
+    //var activeChatRoom = 'Lobby';
     // Connect to websocket
     var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
     document.querySelector("#textarena").onclick = () => {
@@ -44,23 +51,18 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelector("#textarena").setSelectionRange(0, 0);
       }
     }
-    // code to fly the ship, democratically, whomever hits awsd first is the captain!
-    //event listener
+    //event listener for key down events to fly the ship
     window.addEventListener("keydown", onKeyDown, false);
 
     // When connected, configure buttons
     socket.on('connect', () => {
-        // Each button should emit a "submit vote" event
-        document.querySelectorAll('.button0').forEach(button => {
-            button.onclick = () => {
-                const selection = button.dataset.vote;
-                socket.emit('submit vote', {'selection': selection});
-            };
-        });
         var activeroom = localStorage.getItem('activeroom');
         let room_number = activeroom.match(/\d+/)[0];
+        // once connected change to the correct channel and load up the chats
+        // for that room
         socket.emit('change channel', {'channel_number': room_number});
 
+        // code to submit the chats upon click of the submit button
         document.querySelector("#button1").onclick = () => {
                 let chattext = document.querySelector('#textarena').value;
                 let username = localStorage.getItem('username');
@@ -72,6 +74,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 socket.emit('chat emit', {'chattext': chattext , 'channel_number': room_number});
             };
 
+        // code so each room button if pressed changes the room you're in
+        // and loads up the chats for said room
         var allchannelbuttons = document.querySelectorAll("#channel-buttons button");
         for (var i = 0; i < allchannelbuttons.length; i++) {
           allchannelbuttons[i].addEventListener('click', function(event) {
@@ -92,6 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
           });
         }
 
+        // submit the username chosen, and then show the chat arena.
         document.querySelector("#button0").onclick = () => {
                 var username = document.querySelector('#username').value;
                 localStorage.setItem('username', username);
@@ -102,6 +107,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.querySelector('#thechatarea').style.visibility = 'visible';
                 document.querySelector('#username-line').style.visibility = 'hidden';
             };
+
+        // code to add channels
         document.querySelector("#button2").onclick = () => {
                 const newchannel = document.querySelector('#newchannel').value;
                 var activeChatRoom = newchannel;
@@ -112,18 +119,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }*/
     });
 
-    // When a new vote is announced, increase the count
-    socket.on('vote totals', data => {
-        document.querySelector('#yes').innerHTML = data.yes;
-        document.querySelector('#no').innerHTML = data.no;
-        document.querySelector('#maybe').innerHTML = data.maybe;
-    });
-
     // When new text is chatted, broadcast it to all
     socket.on('chat emit', data => {
         document.querySelector('#chathistory-area').innerHTML += '<div>' + data.chattext + '</div>';
     });
 
+    // code to broadcast new channel information.
     socket.on('new channel', data => {
         var allchannelbuttons = document.querySelectorAll("#channel-buttons button");
         var chatroomCount = allchannelbuttons.length;
@@ -150,6 +151,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // code to broadcast channel changes
     socket.on('change channel', data => {
         var chatobject = '';
         for(var i = 0; i < data.length; i++) {
@@ -158,6 +160,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelector('#chathistory-area').innerHTML = data;
     });
 
+    // code to broadcast flying data
     socket.on('on fly', data => {
         let keyD = data.keyD;
         let keyS = data.keyS;
@@ -177,6 +180,7 @@ document.addEventListener('DOMContentLoaded', () => {
   window.requestAnimationFrame = requestAnimationFrame;
 })();
 
+// handle key down events for flying the ship
 function onKeyDown(event) {
   var keyCode = event.keyCode;
   switch (keyCode) {
@@ -201,6 +205,7 @@ function onKeyDown(event) {
   }
 }
 
+// draw the asteroids ship
 function draw() {
   window.requestAnimationFrame(draw);
   var canvas = document.getElementById('canvas');
@@ -250,6 +255,8 @@ function draw() {
   }
 }
 
+// code to make the ship fly, receives the keydown info
+// and responds accordingly
 function fly(keyD, keyS, keyA, keyW, keyLeft, keyRight) {
   window.requestAnimationFrame(draw);
   var canvas = document.getElementById('canvas');

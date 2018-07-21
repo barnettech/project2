@@ -13,6 +13,7 @@
         <div class="container">
           <div class="row">
             <div class="col-5">
+              <!-- area to show the channel listing -->
               <section id="channel-listing">
                     <h3>Channel Listing:</h3>
                     <div id="channel-buttons">
@@ -29,11 +30,13 @@
                 </section>
             </div>
             <div class="col-5">
+              <!-- chat area is below -->
               <section id='thechatarea'>
                 <h3>Enter the chat below:</h3>
                 <textarea id="textarena" rows="2" cols="50">
                 </textarea><br/>
                 <button id="button1">Submit</button>
+                <!-- show the chat history -->
                 <div id="chathistory-area">
                   {% for result in chats_in_rooms[user_current_room] %}
                     <div>{{result}}</div>
@@ -43,6 +46,7 @@
             </div>
           </div>  <!-- closes the row div -->
           <row>
+              <!-- area to fly the 1979 asteroid classic ship -->
               <div>Fly a 1980's style asteroid ship democratically (yes the triangle was a ship and it was a smash hit on the atari 2600!):
               <canvas id="canvas" width="1000" height="1000"></canvas>
           </row>
