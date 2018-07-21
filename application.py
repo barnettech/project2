@@ -35,6 +35,9 @@ def chat(data):
     room_number = int(data["channel_number"])
     #get rid of any white space to the right that may have been entered.
     chats_in_rooms[room_number].append(chattext.rstrip())
+    #only keep 100 chats in the chat history
+    if len(chats_in_rooms[room_number]) > 100:
+      chats_in_rooms[room_number].pop(0)
     emit("chat emit", {'chattext': chattext, 'channel_number' : room_number},
       broadcast=True)
 
