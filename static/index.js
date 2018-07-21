@@ -70,7 +70,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.querySelector('#textarena').focus();
                 let room_selected_selector = localStorage.getItem('activeroom');
                 let room_number = room_selected_selector.match(/\d+/)[0];
-                chattext = username + ': ' + chattext
+                let today = new Date();
+                let date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+                let time = today.getHours() + ":" + today.getMinutes();
+                let dateTime = date+' '+time;
+                chattext = username + ': (' + dateTime + ') ' + chattext
                 socket.emit('chat emit', {'chattext': chattext , 'channel_number': room_number});
             };
 
