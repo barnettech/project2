@@ -42,7 +42,6 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelector('#username-line').style.visibility = 'hidden';
         document.querySelector('#thechatarea').style.visibility = 'visible';
     }
-    //var activeChatRoom = 'Lobby';
     // Connect to websocket
     var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
     document.querySelector("#textarena").onclick = () => {
@@ -132,9 +131,6 @@ document.addEventListener('DOMContentLoaded', () => {
                   socket.emit('add channel', {'newchannel': newchannel});
                 }
             };
-        /*document.querySelector("#button-ship").onclick = () => {
-          draw();
-        }*/
     });
 
     // When new text is chatted, broadcast it to all
@@ -191,7 +187,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// https://stackoverflow.com/questions/20567342/how-to-create-a-canvas-animation-with-one-moving-triangle-rectangle
 (function() {
   var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
     window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
