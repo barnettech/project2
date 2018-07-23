@@ -24,5 +24,6 @@ source setenv.sh
 This is a basic proof of concept for using Socket.IO for networked
 gaming, I'm looking forward to playing around with a
 more worked out networked game for the final project as time
-will allow.
+will allow.  Each chat user can move the ship using the AWSD keys,
+and the ship will then move democratically on everyone's screen.
 
