@@ -20,3 +20,9 @@ a requirements file (no extra packages were installed), and a setenv.sh
 file for your convenience to set environment variables using
 source setenv.sh
 
+## Notes on the basic atari 2600 asteroids ship
+This is a basic proof of concept for using Socket.IO for networked
+gaming, I'm looking forward to playing around with a
+more worked out networked game for the final project as time
+will allow.
+
